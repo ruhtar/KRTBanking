@@ -1,0 +1,66 @@
+# =========================
+# .NET / Visual Studio / Rider
+# =========================
+
+# Build results
+bin/
+obj/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Logs
+*.log
+
+# Test results
+TestResults/
+
+# NuGet packages
+*.nupkg
+.nuget/
+packages/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Publish
+publish/
+*.Publish.xml
+*.pubxml
+*.pubxml.user
+
+# ASP.NET
+wwwroot/lib/
+
+# Entity Framework
+Migrations/*.csproj*
+
+# Secrets
+secrets.json
+appsettings.Development.json
+
+# Backup & temp
+*.bak
+*.tmp
+*.temp
+
+# Rider cache
+.idea/.idea.*
+.idea/modules.xml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/shelf

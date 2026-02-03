@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KRTBank.API", "KRTBank.API\KRTBank.API.csproj", "{AB9A4C3F-C355-463A-85B3-23A62E6CB902}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8303DA6A-AEE6-4F3A-8F7F-69D3F5E8503B}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KRTBank.Domain", "KRTBank.Domain\KRTBank.Domain.csproj", "{654F3C5C-5531-4741-859D-081C0EF459E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB9A4C3F-C355-463A-85B3-23A62E6CB902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB9A4C3F-C355-463A-85B3-23A62E6CB902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB9A4C3F-C355-463A-85B3-23A62E6CB902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB9A4C3F-C355-463A-85B3-23A62E6CB902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{654F3C5C-5531-4741-859D-081C0EF459E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{654F3C5C-5531-4741-859D-081C0EF459E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{654F3C5C-5531-4741-859D-081C0EF459E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{654F3C5C-5531-4741-859D-081C0EF459E4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

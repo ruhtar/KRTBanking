@@ -1,0 +1,7 @@
+﻿services:
+  krtbank.api:
+    image: krtbank.api
+    build:
+      context: .
+      dockerfile: KRTBank.API/Dockerfile
+
