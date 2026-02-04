@@ -41,8 +41,6 @@ public class AccountRepository : IAccountRepository
     
     public async Task<Account?> GetByCpfAsync(string cpf, CancellationToken cancellationToken = default)
     {
-        var cpfValueObject = new Cpf(cpf);
-        
         var queryConfig = new QueryOperationConfig
         {
             IndexName = "CpfIndex",        
@@ -51,7 +49,7 @@ public class AccountRepository : IAccountRepository
                 ExpressionStatement = "Cpf = :v_cpf",
                 ExpressionAttributeValues = new Dictionary<string, DynamoDBEntry>
                 {
-                    { ":v_cpf",  cpfValueObject.Value}
+                    { ":v_cpf",  cpf}
                 }
             },
             Limit = 1  // CPF deve ser único

@@ -9,6 +9,9 @@ public class AccountDbModel
     [DynamoDBHashKey]
     public string Id { get; set; } = default!;
     public string HolderName { get; set; } = default!;
+    
+    [DynamoDBProperty]
+    [DynamoDBGlobalSecondaryIndexHashKey("CpfIndex")] 
     public string Cpf { get; set; } = default!;
     public int Status { get; set; }
     

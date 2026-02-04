@@ -4,6 +4,7 @@ using KRTBank.Domain.Entities;
 using KRTBank.Domain.Enums;
 using KRTBank.Domain.Exceptions;
 using KRTBank.Domain.Interfaces;
+using KRTBank.Domain.ValueObjects;
 
 public class AccountService : IAccountService
 {
@@ -39,10 +40,17 @@ public class AccountService : IAccountService
 
     public async Task<AccountDto> CreateAsync(CreateAccountDto dto, CancellationToken cancellationToken = default)
     {
+        var alreadyExistAccount = await _repository.GetByCpfAsync(new Cpf(dto.Cpf), cancellationToken);
+
+        if (alreadyExistAccount is not null)
+        {
+            throw new DomainException("An account for this CPF already exists.", 422);
+        }
+        
         var account = new Account(dto.HolderName, dto.Cpf);
 
         await _repository.AddAsync(account, cancellationToken);
-
+        
         await _publisher.PublishAsync(new
         {
             Type = "AccountCreated",
@@ -54,7 +62,6 @@ public class AccountService : IAccountService
 
         return new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
     }
-
 
     public async Task UpdateAsync(Guid id, UpdateAccountDto dto, CancellationToken cancellationToken = default)
     {
@@ -71,6 +78,8 @@ public class AccountService : IAccountService
         else account.Deactivate();
 
         await _repository.UpdateAsync(account, cancellationToken);
+        
+        await _cache.RemoveAsync(id.ToString());
 
         await _publisher.PublishAsync(new
         {
@@ -89,6 +98,8 @@ public class AccountService : IAccountService
                       ?? throw new DomainException($"Account with id {id} was not found.", 400);
 
         await _repository.DeleteAsync(id, cancellationToken);
+        
+        await _cache.RemoveAsync(id.ToString());
 
         await _publisher.PublishAsync(new
         {
