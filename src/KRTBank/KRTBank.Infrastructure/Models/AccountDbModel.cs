@@ -1,4 +1,5 @@
 using Amazon.DynamoDBv2.DataModel;
+using KRTBank.Domain.Entities;
 
 namespace KRTBank.Infrastructure.Models;
 
@@ -10,4 +11,15 @@ public class AccountDbModel
     public string HolderName { get; set; } = default!;
     public string Cpf { get; set; } = default!;
     public int Status { get; set; }
+    
+    public static AccountDbModel ToDbModel(Account account)
+    {
+        return new AccountDbModel
+        {
+            Id = account.Id.ToString(),
+            HolderName = account.HolderName,
+            Cpf = account.Cpf.Value,
+            Status = (int)account.Status
+        };
+    }
 }
