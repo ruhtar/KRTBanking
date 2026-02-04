@@ -9,27 +9,32 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _repository;
     private readonly IEventPublisher _publisher;
-
-    public AccountService(IAccountRepository repository, IEventPublisher publisher)
+    private readonly ICacheService _cache;
+        
+    public AccountService(IAccountRepository repository, IEventPublisher publisher, ICacheService cache)
     {
         _repository = repository;
         _publisher = publisher;
+        _cache = cache;
     }
 
     public async Task<AccountDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        // var cached = await _cache.GetAsync(id);
-        // // if (cached != null)
-        // return cached;
+        var cached = await _cache.GetAsync<AccountDto>(id.ToString());
+        if (cached != null)
+            return cached;
+        
         var account = await _repository.GetByIdAsync(id, cancellationToken);
         if (account is null)
         {
             return null;
         }
-        
-        // await _cache.SetAsync(dto);
 
-        return new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
+        var dto = new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
+        
+        await _cache.SetAsync(dto.Id.ToString(), dto);
+
+        return dto;
     }
 
     public async Task<AccountDto> CreateAsync(CreateAccountDto dto, CancellationToken cancellationToken = default)
