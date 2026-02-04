@@ -3,19 +3,19 @@ using KRTBank.Domain.Exceptions;
 
 namespace KRTBank.Domain.ValueObjects;
 
-public sealed class Cpf : IEquatable<Cpf>
+public sealed class Cpf
 {
     public string Value { get; }
 
     public Cpf(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("CPF é obrigatório.");
+            throw new DomainException("CPF is required.", 400);
 
         var normalized = Normalize(value);
 
         if (!IsValid(normalized))
-            throw new DomainException("CPF inválido.");
+            throw new DomainException("Invalid CPF.", 400);
 
         Value = normalized;
     }

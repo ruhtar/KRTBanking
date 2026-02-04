@@ -9,10 +9,10 @@ public class HolderName
     public HolderName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("Nome do titular é obrigatório.");
+            throw new DomainException("HolderName is required.", 400);
 
         if (value.Length < 3)
-            throw new DomainException("Nome do titular é muito curto.");
+            throw new DomainException("HolderName is too short.", 400);
 
         Value = value.Trim();
     }

@@ -2,6 +2,7 @@ using KRTBank.Application.DTOs;
 using KRTBank.Application.Interfaces;
 using KRTBank.Domain.Entities;
 using KRTBank.Domain.Enums;
+using KRTBank.Domain.Exceptions;
 using KRTBank.Domain.Interfaces;
 
 public class AccountService : IAccountService
@@ -53,7 +54,7 @@ public class AccountService : IAccountService
     public async Task UpdateAsync(Guid id, UpdateAccountDto dto, CancellationToken cancellationToken = default)
     {
         var account = await _repository.GetByIdAsync(id, cancellationToken)
-                      ?? throw new Exception($"Conta com id {id} não encontrada.");
+                      ?? throw new DomainException($"Account with id {id} was not found.", 400);
 
         var oldName = account.HolderName;
 
@@ -80,7 +81,7 @@ public class AccountService : IAccountService
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var account = await _repository.GetByIdAsync(id, cancellationToken)
-                      ?? throw new Exception($"Conta com id {id} não encontrada.");
+                      ?? throw new DomainException($"Account with id {id} was not found.", 400);
 
         await _repository.DeleteAsync(id, cancellationToken);
 

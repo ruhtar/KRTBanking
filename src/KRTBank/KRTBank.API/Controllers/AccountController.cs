@@ -13,9 +13,6 @@ public class AccountsController : ControllerBase
     {
         _service = service;
     }
-    
-    //TODO: ADICIONAR TRY CATCH
-    // TALVEZ MIDDLEWARE
 
     [HttpPost]
     public async Task<IActionResult> Create(
@@ -49,15 +46,8 @@ public class AccountsController : ControllerBase
         [FromBody] UpdateAccountDto dto,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            await _service.UpdateAsync(id, dto, cancellationToken);
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        await _service.UpdateAsync(id, dto, cancellationToken);
+        return NoContent();
     }
 
     [HttpDelete("{id:guid}")]
@@ -65,14 +55,7 @@ public class AccountsController : ControllerBase
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            await _service.DeleteAsync(id, cancellationToken);
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        await _service.DeleteAsync(id, cancellationToken);
+        return NoContent();
     }
 }

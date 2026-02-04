@@ -1,3 +1,4 @@
+using KRTBank.API.Middlewares;
 using KRTBank.Application;
 using KRTBank.Infrastructure;
 
@@ -27,7 +28,8 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseHttpsRedirection();
         app.MapControllers();
         app.UseAuthorization();
