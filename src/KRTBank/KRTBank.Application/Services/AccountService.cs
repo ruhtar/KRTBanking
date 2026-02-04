@@ -16,13 +16,15 @@ public class AccountService : IAccountService
         _repository = repository;
     }
 
-    public async Task<Guid> CreateAsync(CreateAccountDto dto, CancellationToken cancellationToken = default)
+    public async Task<AccountDto> CreateAsync(CreateAccountDto dto, CancellationToken cancellationToken = default)
     {
         var account = new Account(dto.HolderName, dto.Cpf);
         
+        //TODO: ADICIONAR LOGICA PARA VALIDAR SE JÁ EXISTE CONTA CRIADA PARA DETERMINADO CPF.
+        
         await _repository.AddAsync(account, cancellationToken);
         
-        return account.Id;
+        return new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
     }
 
     public async Task<AccountDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

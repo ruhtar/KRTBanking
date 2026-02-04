@@ -22,8 +22,12 @@ public class AccountsController : ControllerBase
         [FromBody] CreateAccountDto dto,
         CancellationToken cancellationToken)
     {
-        var id = await _service.CreateAsync(dto, cancellationToken);
-        return CreatedAtAction(nameof(GetById), new { id }, id);
+        var accountDto = await _service.CreateAsync(dto, cancellationToken);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = accountDto.Id },
+            accountDto
+        );
     }
 
     [HttpGet("{id:guid}")]

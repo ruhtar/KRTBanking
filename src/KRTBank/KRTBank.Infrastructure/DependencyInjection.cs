@@ -12,6 +12,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddAWSService<IAmazonDynamoDB>();
+
         services.AddSingleton<IDynamoDBContext, DynamoDBContext>(); // TODO: porque singleton?
 
         services.AddScoped<IAccountRepository, AccountRepository>();
