@@ -10,6 +10,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddAuthorization();
+        
+        builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -27,7 +29,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
+        app.MapControllers();
         app.UseAuthorization();
 
         app.Run();
