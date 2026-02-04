@@ -20,11 +20,21 @@ public class AccountsController : ControllerBase
         [FromBody] CreateAccountDto dto,
         CancellationToken cancellationToken)
     {
-        var accountDto = await _service.CreateAsync(dto, cancellationToken);
+        var result = await _service.CreateAsync(dto, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Problem(
+                title: "Error creating account",
+                detail: result.Message,
+                statusCode: result.Code
+            );
+        }
+
         return CreatedAtAction(
             nameof(GetById),
-            new { id = accountDto.Id },
-            accountDto
+            new { id = result.Data!.Id },
+            result.Data
         );
     }
 
@@ -33,12 +43,18 @@ public class AccountsController : ControllerBase
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
-        var account = await _service.GetByIdAsync(id, cancellationToken);
+        var result = await _service.GetByIdAsync(id, cancellationToken);
 
-        if (account is null)
-            return NotFound();
+        if (!result.IsSuccess)
+        {
+            return Problem(
+                title: "Error retrieving account",
+                detail: result.Message,
+                statusCode: result.Code
+            );
+        }
 
-        return Ok(account);
+        return Ok(result.Data);
     }
 
     [HttpPut("{id:guid}")]
@@ -47,7 +63,17 @@ public class AccountsController : ControllerBase
         [FromBody] UpdateAccountDto dto,
         CancellationToken cancellationToken)
     {
-        await _service.UpdateAsync(id, dto, cancellationToken);
+        var result = await _service.UpdateAsync(id, dto, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Problem(
+                title: "Error updating account",
+                detail: result.Message,
+                statusCode: result.Code
+            );
+        }
+
         return NoContent();
     }
 
@@ -56,7 +82,17 @@ public class AccountsController : ControllerBase
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
-        await _service.DeleteAsync(id, cancellationToken);
+        var result = await _service.DeleteAsync(id, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Problem(
+                title: "Error deleting account",
+                detail: result.Message,
+                statusCode: result.Code
+            );
+        }
+
         return NoContent();
     }
 }

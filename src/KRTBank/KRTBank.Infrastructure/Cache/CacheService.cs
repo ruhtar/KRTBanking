@@ -15,8 +15,7 @@ public class CacheService : ICacheService
     {
         var options = new ConfigurationOptions
         {
-            EndPoints = { redisOptions.Value.Endpoint },
-            Ssl = redisOptions.Value.Endpoint.Contains("amazonaws") // TODO: fazer isso mesmo? SSL só para AWS
+            EndPoints = { redisOptions.Value.Endpoint }
         };
 
         var redis = ConnectionMultiplexer.Connect(options);
@@ -26,10 +25,7 @@ public class CacheService : ICacheService
     public async Task<T?> GetAsync<T>(string key)
     {
         var value = await _database.StringGetAsync(key);
-        if (value.IsNullOrEmpty)
-            return default;
-
-        return JsonSerializer.Deserialize<T>(value);
+        return value.IsNullOrEmpty ? default : JsonSerializer.Deserialize<T>(value);
     }
 
     public async Task SetAsync<T>(string key, T value)
