@@ -3,7 +3,7 @@ using KRTBank.Domain.ValueObjects;
 
 namespace KRTBank.Domain.Entities;
 
-public class Account
+public sealed class Account
 {
     public Guid Id { get; private set; }
     public string HolderName { get; private set; }
