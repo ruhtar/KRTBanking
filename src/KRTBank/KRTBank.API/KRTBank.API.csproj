@@ -21,6 +21,7 @@
     <ItemGroup>
       <ProjectReference Include="..\KRTBank.Application\KRTBank.Application.csproj" />
       <ProjectReference Include="..\KRTBank.Domain\KRTBank.Domain.csproj" />
+      <ProjectReference Include="..\KRTBank.Infrastructure\KRTBank.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
