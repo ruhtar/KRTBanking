@@ -31,4 +31,10 @@ public class AccountRepository : IAccountRepository
         var model = AccountDbModel.ToDbModel(account);
         await _context.SaveAsync(model, cancellationToken);
     }
+    
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        await _context.DeleteAsync<AccountDbModel>(id.ToString(), cancellationToken);
+    }
+
 }

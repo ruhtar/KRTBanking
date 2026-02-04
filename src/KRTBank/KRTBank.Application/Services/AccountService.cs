@@ -59,9 +59,13 @@ public class AccountService : IAccountService
         await _repository.UpdateAsync(account, cancellationToken);
     }
 
-
-    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var account = await _repository.GetByIdAsync(id, cancellationToken);
+
+        if (account is null)
+            throw new Exception($"Conta com id {id} não encontrada."); // TODO: melhorar. Result? Exception?
+
+        await _repository.DeleteAsync(id, cancellationToken);
     }
 }
