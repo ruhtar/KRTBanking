@@ -1,3 +1,5 @@
+using KRTBank.Application;
+
 namespace KRTBank.API;
 
 public class Program
@@ -11,8 +13,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        var app = builder.Build();
+        builder.Services.AddApplication();
 
+        var app = builder.Build();
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

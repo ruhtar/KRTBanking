@@ -1,6 +1,6 @@
 using KRTBank.Application.DTOs;
 
-namespace KRTBank.Application.Services;
+namespace KRTBank.Application.Interfaces;
 
 public interface IAccountService
 {

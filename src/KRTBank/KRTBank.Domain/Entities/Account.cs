@@ -13,7 +13,7 @@ public class Account
     public Account(string holderName, string cpf)
     {
         Id = Guid.NewGuid();
-        HolderName = holderName;
+        HolderName = holderName; // TODO: value object?
         Cpf = new Cpf(cpf);
         Status = AccountStatus.Active;
     }
