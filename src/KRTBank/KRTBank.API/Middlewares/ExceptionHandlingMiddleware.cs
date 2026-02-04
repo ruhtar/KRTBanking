@@ -27,7 +27,7 @@ public class ExceptionHandlingMiddleware
                 ex.Message
             );
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             await WriteProblemDetailsAsync(
                 context,
