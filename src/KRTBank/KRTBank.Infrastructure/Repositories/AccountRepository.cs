@@ -14,27 +14,27 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
     
-    public async Task AddAsync(Account account)
+    public async Task AddAsync(Account account, CancellationToken cancellationToken = default)
     {
         var model = ToDbModel(account);
-        await _context.SaveAsync(model);
+        await _context.SaveAsync(model, cancellationToken);
     }
 
-    public async Task<Account?> GetByIdAsync(Guid id)
+    public async Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var model = await _context.LoadAsync<AccountDbModel>(id.ToString());
+        var model = await _context.LoadAsync<AccountDbModel>(id.ToString(), cancellationToken);
         return model is null ? null : ToDomain(model);
     }
 
-    public async Task UpdateAsync(Account account)
+    public async Task UpdateAsync(Account account, CancellationToken cancellationToken = default)
     {
         var model = ToDbModel(account);
-        await _context.SaveAsync(model);
+        await _context.SaveAsync(model, cancellationToken);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var model = await _context.LoadAsync<AccountDbModel>(id.ToString());
+        var model = await _context.LoadAsync<AccountDbModel>(id.ToString(), cancellationToken);
 
         if (model is null)
             return;
@@ -43,7 +43,7 @@ public class AccountRepository : IAccountRepository
         
         account.Deactivate(); // soft delete
         
-        await _context.SaveAsync(ToDbModel(account));
+        await _context.SaveAsync(ToDbModel(account), cancellationToken);
     }
     
     private static AccountDbModel ToDbModel(Account account)

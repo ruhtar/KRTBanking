@@ -4,8 +4,8 @@ namespace KRTBank.Domain.Interfaces;
 
 public interface IAccountRepository
 {
-    Task AddAsync(Account account);
-    Task<Account?> GetByIdAsync(Guid id);
-    Task UpdateAsync(Account account);
-    Task DeleteAsync(Guid id);
+    Task AddAsync(Account account, CancellationToken cancellationToken = default);
+    Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task UpdateAsync(Account account, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }
