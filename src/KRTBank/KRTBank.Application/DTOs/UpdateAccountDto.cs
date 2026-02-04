@@ -1,3 +1,6 @@
 namespace KRTBank.Application.DTOs;
 
-public record UpdateAccountDto();
+public sealed record UpdateAccountDto(
+    string HolderName,
+    bool IsActive
+);

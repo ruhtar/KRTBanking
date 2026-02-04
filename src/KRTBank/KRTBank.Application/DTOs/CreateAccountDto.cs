@@ -1,3 +1,6 @@
 namespace KRTBank.Application.DTOs;
 
-public record CreateAccountDto();
+public sealed record CreateAccountDto(
+    string HolderName,
+    string Cpf
+);
