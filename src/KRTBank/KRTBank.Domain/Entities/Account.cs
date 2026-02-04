@@ -7,40 +7,37 @@ namespace KRTBank.Domain.Entities;
 public sealed class Account
 {
     public Guid Id { get; private set; }
-    public string HolderName { get; private set; }
+    public HolderName HolderName { get; private set; }
     public Cpf Cpf { get; private set; }
     public AccountStatus Status { get; private set; }
 
     public Account(string holderName, string cpf)
     {
         Id = Guid.NewGuid();
-        HolderName = holderName; // TODO: value object?
+        HolderName = new HolderName(holderName); 
         Cpf = new Cpf(cpf);
         Status = AccountStatus.Active;
     }
     
     // Rehidratar
-    private Account(Guid id, string holderName, Cpf cpf, AccountStatus status)
+    private Account(Guid id, HolderName holderName, Cpf cpf, AccountStatus status)
     {
         Id = id;
-        HolderName = holderName; // TODO: value object?
+        HolderName = holderName;
         Cpf = cpf;
         Status = status;
     }
 
     public void ChangeHolderName(string newName)
     {
-        if (string.IsNullOrWhiteSpace(newName))
-            throw new DomainException("Nome do titular é obrigatório.");
-
-        HolderName = newName; // TODO: value object?
+        HolderName = new HolderName(newName);
     }
     
     public static Account ToDomain(string id, string holderName, string cpf, int status)
     {
         return new Account(
             Guid.Parse(id),
-            holderName,
+            new HolderName(holderName),
             new Cpf(cpf),
             (AccountStatus)status
         );
