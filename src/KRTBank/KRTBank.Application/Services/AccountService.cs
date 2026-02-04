@@ -1,39 +1,26 @@
 using KRTBank.Application.DTOs;
 using KRTBank.Application.Interfaces;
 using KRTBank.Domain.Entities;
+using KRTBank.Domain.Enums;
 using KRTBank.Domain.Interfaces;
-
-namespace KRTBank.Application.Services;
 
 public class AccountService : IAccountService
 {
     private readonly IAccountRepository _repository;
-    
-    //TODO: FAZER CACHE E PUBLISHer
+    private readonly IEventPublisher _publisher;
 
-    public AccountService(IAccountRepository repository)
+    public AccountService(IAccountRepository repository, IEventPublisher publisher)
     {
         _repository = repository;
-    }
-
-    public async Task<AccountDto> CreateAsync(CreateAccountDto dto, CancellationToken cancellationToken = default)
-    {
-        var account = new Account(dto.HolderName, dto.Cpf);
-        
-        //TODO: ADICIONAR LOGICA PARA VALIDAR SE JÁ EXISTE CONTA CRIADA PARA DETERMINADO CPF.
-        
-        await _repository.AddAsync(account, cancellationToken);
-        
-        return new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
+        _publisher = publisher;
     }
 
     public async Task<AccountDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         // var cached = await _cache.GetAsync(id);
-        // if (cached != null) return cached;
-
+        // // if (cached != null)
+        // return cached;
         var account = await _repository.GetByIdAsync(id, cancellationToken);
-
         if (account is null)
         {
             return null;
@@ -44,30 +31,64 @@ public class AccountService : IAccountService
         return new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
     }
 
+    public async Task<AccountDto> CreateAsync(CreateAccountDto dto, CancellationToken cancellationToken = default)
+    {
+        var account = new Account(dto.HolderName, dto.Cpf);
+
+        await _repository.AddAsync(account, cancellationToken);
+
+        await _publisher.PublishAsync(new
+        {
+            Type = "AccountCreated",
+            AccountId = account.Id,
+            account.HolderName,
+            account.Cpf,
+            Timestamp = DateTime.UtcNow
+        }, cancellationToken);
+
+        return new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
+    }
+
+
     public async Task UpdateAsync(Guid id, UpdateAccountDto dto, CancellationToken cancellationToken = default)
     {
-        var account = await _repository.GetByIdAsync(id, cancellationToken);
+        var account = await _repository.GetByIdAsync(id, cancellationToken)
+                      ?? throw new Exception($"Conta com id {id} não encontrada.");
 
-        if (account is null)
-            throw new Exception($"Conta com id {id} não encontrada.");// TODO: melhorar. Result? Exception?
-        
+        var oldName = account.HolderName;
+
+        var newName = dto.HolderName;
+
         account.ChangeHolderName(dto.HolderName);
 
-        if (dto.IsActive)
-            account.Activate();
-        else
-            account.Deactivate();
+        if (dto.IsActive) account.Activate();
+        else account.Deactivate();
 
         await _repository.UpdateAsync(account, cancellationToken);
+
+        await _publisher.PublishAsync(new
+        {
+            Type = "AccountUpdated",
+            AccountId = account.Id,
+            OldName = oldName,
+            NewName = newName,
+            IsActive = account.Status == AccountStatus.Active,
+            Timestamp = DateTime.UtcNow
+        }, cancellationToken);
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var account = await _repository.GetByIdAsync(id, cancellationToken);
-
-        if (account is null)
-            throw new Exception($"Conta com id {id} não encontrada."); // TODO: melhorar. Result? Exception?
+        var account = await _repository.GetByIdAsync(id, cancellationToken)
+                      ?? throw new Exception($"Conta com id {id} não encontrada.");
 
         await _repository.DeleteAsync(id, cancellationToken);
+
+        await _publisher.PublishAsync(new
+        {
+            Type = "AccountDeleted",
+            AccountId = account.Id,
+            Timestamp = DateTime.UtcNow
+        }, cancellationToken);
     }
 }

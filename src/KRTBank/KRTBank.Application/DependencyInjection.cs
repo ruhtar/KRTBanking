@@ -1,5 +1,4 @@
 using KRTBank.Application.Interfaces;
-using KRTBank.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace KRTBank.Application;
