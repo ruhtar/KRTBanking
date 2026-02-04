@@ -1,6 +1,8 @@
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using KRTBank.Domain.Entities;
 using KRTBank.Domain.Interfaces;
+using KRTBank.Domain.ValueObjects;
 using KRTBank.Infrastructure.Models;
 
 namespace KRTBank.Infrastructure.Repositories;
@@ -36,4 +38,31 @@ public class AccountRepository : IAccountRepository
     {
         await _context.DeleteAsync<AccountDbModel>(id.ToString(), cancellationToken);
     }
+    
+    public async Task<Account?> GetByCpfAsync(string cpf, CancellationToken cancellationToken = default)
+    {
+        var cpfValueObject = new Cpf(cpf);
+        
+        var queryConfig = new QueryOperationConfig
+        {
+            IndexName = "CpfIndex",        
+            KeyExpression = new Expression
+            {
+                ExpressionStatement = "Cpf = :v_cpf",
+                ExpressionAttributeValues = new Dictionary<string, DynamoDBEntry>
+                {
+                    { ":v_cpf",  cpfValueObject.Value}
+                }
+            },
+            Limit = 1  // CPF deve ser único
+        };
+
+        var search = _context.FromQueryAsync<AccountDbModel>(queryConfig);
+
+        var results = await search.GetNextSetAsync(cancellationToken);
+        var model = results.FirstOrDefault();
+
+        return model is null ? null : Account.ToDomain(model.Id, model.HolderName, model.Cpf, model.Status);
+    }
+
 }
