@@ -50,7 +50,7 @@ public class AccountService : IAccountService
 
         if (account is null)
             throw new Exception($"Conta com id {id} não encontrada.");// TODO: melhorar. Result? Exception?
-
+        
         account.ChangeHolderName(dto.HolderName);
 
         if (dto.IsActive)

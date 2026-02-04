@@ -1,6 +1,9 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.SimpleNotificationService;
+using KRTBank.Application.Interfaces;
 using KRTBank.Domain.Interfaces;
+using KRTBank.Infrastructure.Publishers;
 using KRTBank.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +21,8 @@ public static class DependencyInjection
         services.AddScoped<IAccountRepository, AccountRepository>();
 
         // Mensageria / Eventos (se criar depois)
-        // services.AddScoped<IAccountEventPublisher, AccountEventPublisher>();
+        services.AddAWSService<IAmazonSimpleNotificationService>();
+        services.AddScoped<IEventPublisher, SnsEventPublisher>();
 
         return services;
     }

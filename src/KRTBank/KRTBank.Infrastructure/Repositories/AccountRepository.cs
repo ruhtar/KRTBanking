@@ -36,5 +36,4 @@ public class AccountRepository : IAccountRepository
     {
         await _context.DeleteAsync<AccountDbModel>(id.ToString(), cancellationToken);
     }
-
 }
