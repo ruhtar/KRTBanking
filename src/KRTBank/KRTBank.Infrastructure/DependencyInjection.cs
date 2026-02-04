@@ -20,7 +20,6 @@ public static class DependencyInjection
 
         services.AddScoped<IAccountRepository, AccountRepository>();
 
-        // Mensageria / Eventos (se criar depois)
         services.AddAWSService<IAmazonSimpleNotificationService>();
         services.AddScoped<IEventPublisher, SnsEventPublisher>();
 

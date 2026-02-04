@@ -10,7 +10,6 @@ public class SnsEventPublisher : IEventPublisher
     private readonly IAmazonSimpleNotificationService _sns;
     private const string Arn = "arn:aws:sns:us-east-1:775442788781:krtbank-account-events"; //TODO: USAR UM SECRETS
     
-    
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

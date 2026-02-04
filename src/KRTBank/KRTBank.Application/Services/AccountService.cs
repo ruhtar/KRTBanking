@@ -60,7 +60,7 @@ public class AccountService : IAccountService
 
         var newName = dto.HolderName;
 
-        account.ChangeHolderName(dto.HolderName);
+        account.ChangeHolderName(newName);
 
         if (dto.IsActive) account.Activate();
         else account.Deactivate();
