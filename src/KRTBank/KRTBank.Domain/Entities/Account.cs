@@ -23,7 +23,7 @@ public sealed class Account
     private Account(Guid id, string holderName, Cpf cpf, AccountStatus status)
     {
         Id = id;
-        HolderName = holderName;
+        HolderName = holderName; // TODO: value object?
         Cpf = cpf;
         Status = status;
     }
@@ -33,7 +33,7 @@ public sealed class Account
         if (string.IsNullOrWhiteSpace(newName))
             throw new DomainException("Nome do titular é obrigatório.");
 
-        HolderName = newName;
+        HolderName = newName; // TODO: value object?
     }
     
     public static Account ToDomain(string id, string holderName, string cpf, int status)
