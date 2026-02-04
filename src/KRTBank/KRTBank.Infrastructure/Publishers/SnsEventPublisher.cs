@@ -3,6 +3,9 @@ using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using KRTBank.Application.Interfaces;
+using KRTBank.Infrastructure.Options;
+using KRTBank.Infrastructure.Secrets;
+using Microsoft.Extensions.Options;
 
 namespace KRTBank.Infrastructure.Publishers;
 
@@ -10,7 +13,7 @@ public class SnsEventPublisher : IEventPublisher
 {
     private readonly IAmazonSimpleNotificationService _sns;
     private const int MaxRetries = 3;
-    private const string Arn = "arn:aws:sns:us-east-1:775442788781:krtbank-account-events"; //TODO: USAR UM SECRETS
+    private readonly string _arn;
     
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -18,9 +21,15 @@ public class SnsEventPublisher : IEventPublisher
         WriteIndented = false
     };
     
-    public SnsEventPublisher(IAmazonSimpleNotificationService sns)
+    public SnsEventPublisher(IAmazonSimpleNotificationService sns, IOptions<SnsOptions> options, AwsSecretProvider secretProvider)
     {
         _sns = sns;
+
+        var secretName = options.Value.SecretName;
+        var secret = secretProvider.GetSecretAsync<SnsSecret>(secretName)
+            .GetAwaiter().GetResult();
+
+        _arn = secret.TopicArn;
     }
 
     public async Task PublishAsync<T>(
@@ -31,7 +40,7 @@ public class SnsEventPublisher : IEventPublisher
 
         var request = new PublishRequest
         {
-            TopicArn = Arn,
+            TopicArn = _arn,
             Message = json
         };
 
@@ -60,6 +69,4 @@ public class SnsEventPublisher : IEventPublisher
                (awsEx.StatusCode == System.Net.HttpStatusCode.InternalServerError ||
                 awsEx.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable);
     }
-
-
 }
