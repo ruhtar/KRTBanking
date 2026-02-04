@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KRTBank.Api.Controllers;
 
+[ApiController]
 [Route("api/[controller]")]
 public class AccountsController : ControllerBase
 {
