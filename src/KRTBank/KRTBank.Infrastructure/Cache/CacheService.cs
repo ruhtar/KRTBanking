@@ -10,17 +10,21 @@ namespace KRTBank.Infrastructure.Cache;
 public class CacheService : ICacheService
 {
     private readonly IDatabase _database;
-    private static readonly TimeSpan Ttl = TimeSpan.FromDays(1);
+    private readonly TimeSpan _ttl;
 
     public CacheService(IOptions<RedisOptions> redisOptions)
     {
+        var optionsValue = redisOptions.Value;
+
         var options = new ConfigurationOptions
         {
-            EndPoints = { redisOptions.Value.Endpoint }
+            EndPoints = { optionsValue.Endpoint }
         };
 
         var redis = ConnectionMultiplexer.Connect(options);
         _database = redis.GetDatabase();
+
+        _ttl = TimeSpan.FromDays(optionsValue.TtlInDays);
     }
 
     public async Task<T?> GetAsync<T>(string key)
@@ -32,7 +36,7 @@ public class CacheService : ICacheService
     public async Task SetAsync<T>(string key, T value)
     {
         var json = JsonSerializer.Serialize(value);
-        await _database.StringSetAsync(key, json, Ttl);
+        await _database.StringSetAsync(key, json, _ttl);
     }
 
     public async Task RemoveAsync(string key)
