@@ -7,12 +7,12 @@ using KRTBank.Domain.ValueObjects;
 
 public class AccountService : IAccountService
 {
-    private readonly IAccountRepository _repository;
+    private readonly IAccountRepository _accountRepository;
     private readonly ICacheService _cache;
 
-    public AccountService(IAccountRepository repository, ICacheService cache)
+    public AccountService(IAccountRepository accountRepository, ICacheService cache)
     {
-        _repository = repository;
+        _accountRepository = accountRepository;
         _cache = cache;
     }
 
@@ -23,7 +23,7 @@ public class AccountService : IAccountService
         if (cacheExists)
             return Result<AccountDto>.Ok(data: cache);
 
-        var account = await _repository.GetByIdAsync(id, cancellationToken);
+        var account = await _accountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
             return Result<AccountDto>.Fail($"Account with id {id} was not found.", 404);
 
@@ -36,13 +36,13 @@ public class AccountService : IAccountService
     public async Task<Result<AccountDto>> CreateAsync(CreateAccountDto dto,
         CancellationToken cancellationToken = default)
     {
-        var existingAccount = await _repository.GetByCpfAsync(new Cpf(dto.Cpf), cancellationToken);
+        var existingAccount = await _accountRepository.GetByCpfAsync(new Cpf(dto.Cpf), cancellationToken);
         if (existingAccount is not null)
             return Result<AccountDto>.Fail("An account for this CPF already exists.", 422);
 
         var account = new Account(dto.HolderName, dto.Cpf);
 
-        await _repository.AddAsync(account, cancellationToken);
+        await _accountRepository.AddAsync(account, cancellationToken);
 
         var resultDto = new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
 
@@ -51,7 +51,7 @@ public class AccountService : IAccountService
 
     public async Task<Result> UpdateAsync(Guid id, UpdateAccountDto dto, CancellationToken cancellationToken = default)
     {
-        var account = await _repository.GetByIdAsync(id, cancellationToken);
+        var account = await _accountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
             return Result.Fail($"Account with id {id} was not found.", 404);
 
@@ -62,7 +62,7 @@ public class AccountService : IAccountService
         else if (dto.IsActive is false)
             account.Deactivate();
   
-        await _repository.UpdateAsync(account, cancellationToken);
+        await _accountRepository.UpdateAsync(account, cancellationToken);
         await _cache.RemoveAsync(id.ToString());
 
 
@@ -71,11 +71,11 @@ public class AccountService : IAccountService
 
     public async Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var account = await _repository.GetByIdAsync(id, cancellationToken);
+        var account = await _accountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
             return Result.Fail($"Account with id {id} was not found.", 404);
 
-        await _repository.DeleteAsync(id, cancellationToken);
+        await _accountRepository.DeleteAsync(id, cancellationToken);
         await _cache.RemoveAsync(id.ToString());
 
         return Result.Ok("Account deleted successfully.");
