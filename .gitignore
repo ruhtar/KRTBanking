@@ -5,6 +5,8 @@
 # Build results
 bin/
 obj/
+.vs/
+
 
 # Rider / JetBrains
 .idea/

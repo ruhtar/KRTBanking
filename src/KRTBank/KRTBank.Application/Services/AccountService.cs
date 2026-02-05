@@ -9,13 +9,11 @@ using KRTBank.Domain.ValueObjects;
 public class AccountService : IAccountService
 {
     private readonly IAccountRepository _repository;
-    private readonly IEventPublisher _publisher;
     private readonly ICacheService _cache;
 
-    public AccountService(IAccountRepository repository, IEventPublisher publisher, ICacheService cache)
+    public AccountService(IAccountRepository repository, ICacheService cache)
     {
         _repository = repository;
-        _publisher = publisher;
         _cache = cache;
     }
 
@@ -47,15 +45,6 @@ public class AccountService : IAccountService
 
         await _repository.AddAsync(account, cancellationToken);
 
-        await _publisher.PublishAsync(new
-        {
-            Type = "AccountCreated",
-            AccountId = account.Id,
-            account.HolderName,
-            account.Cpf,
-            Timestamp = DateTime.UtcNow
-        }, cancellationToken);
-
         var resultDto = new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
 
         return Result<AccountDto>.Ok("Account created successfully.", resultDto, 201);
@@ -67,8 +56,6 @@ public class AccountService : IAccountService
         if (account is null)
             return Result.Fail($"Account with id {id} was not found.", 404);
 
-        var oldName = account.HolderName;
-
         account.ChangeHolderName(dto.HolderName);
 
         if (dto.IsActive is true)
@@ -79,15 +66,6 @@ public class AccountService : IAccountService
         await _repository.UpdateAsync(account, cancellationToken);
         await _cache.RemoveAsync(id.ToString());
 
-        await _publisher.PublishAsync(new
-        {
-            Type = "AccountUpdated",
-            AccountId = account.Id,
-            OldName = oldName,
-            NewName = dto.HolderName,
-            IsActive = account.Status == AccountStatus.Active,
-            Timestamp = DateTime.UtcNow
-        }, cancellationToken);
 
         return Result.Ok("Account updated successfully.");
     }
@@ -100,13 +78,6 @@ public class AccountService : IAccountService
 
         await _repository.DeleteAsync(id, cancellationToken);
         await _cache.RemoveAsync(id.ToString());
-
-        await _publisher.PublishAsync(new
-        {
-            Type = "AccountDeleted",
-            AccountId = id,
-            Timestamp = DateTime.UtcNow
-        }, cancellationToken);
 
         return Result.Ok("Account deleted successfully.");
     }
