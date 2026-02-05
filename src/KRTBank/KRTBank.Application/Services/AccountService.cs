@@ -1,9 +1,9 @@
 using KRTBank.Application.DTOs;
 using KRTBank.Application.Interfaces;
 using KRTBank.Domain.Entities;
-using KRTBank.Domain.Enums;
 using KRTBank.Domain.ResultPattern;
 using KRTBank.Domain.ValueObjects;
+using Microsoft.AspNetCore.Http;
 
 public class AccountService : IAccountService
 {
@@ -25,12 +25,12 @@ public class AccountService : IAccountService
 
         var account = await _accountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
-            return Result<AccountDto>.Fail($"Account with id {id} was not found.", 404);
+            return Result<AccountDto>.Fail(message: $"Account with id {id} was not found.", code: StatusCodes.Status404NotFound);
 
         var dto = new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
         await _cache.SetAsync(dto.Id.ToString(), dto);
 
-        return Result<AccountDto>.Ok("Account found.", dto);
+        return Result<AccountDto>.Ok(data: dto);
     }
 
     public async Task<Result<AccountDto>> CreateAsync(CreateAccountDto dto,
@@ -38,7 +38,7 @@ public class AccountService : IAccountService
     {
         var existingAccount = await _accountRepository.GetByCpfAsync(new Cpf(dto.Cpf), cancellationToken);
         if (existingAccount is not null)
-            return Result<AccountDto>.Fail("An account for this CPF already exists.", 422);
+            return Result<AccountDto>.Fail("An account for this CPF already exists.", StatusCodes.Status422UnprocessableEntity);
 
         var account = new Account(dto.HolderName, dto.Cpf);
 
@@ -46,14 +46,14 @@ public class AccountService : IAccountService
 
         var resultDto = new AccountDto(account.Id, account.HolderName, account.Cpf, account.Status);
 
-        return Result<AccountDto>.Ok("Account created successfully.", resultDto, 201);
+        return Result<AccountDto>.Ok("Account created successfully.", resultDto, StatusCodes.Status201Created);
     }
 
     public async Task<Result> UpdateAsync(Guid id, UpdateAccountDto dto, CancellationToken cancellationToken = default)
     {
         var account = await _accountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
-            return Result.Fail($"Account with id {id} was not found.", 404);
+            return Result.Fail($"Account with id {id} was not found.", StatusCodes.Status404NotFound);
 
         account.ChangeHolderName(dto.HolderName);
 
@@ -73,7 +73,7 @@ public class AccountService : IAccountService
     {
         var account = await _accountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
-            return Result.Fail($"Account with id {id} was not found.", 404);
+            return Result.Fail($"Account with id {id} was not found.", StatusCodes.Status404NotFound);
 
         await _accountRepository.DeleteAsync(id, cancellationToken);
         await _cache.RemoveAsync(id.ToString());

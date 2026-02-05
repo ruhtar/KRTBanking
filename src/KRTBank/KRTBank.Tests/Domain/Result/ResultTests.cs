@@ -1,4 +1,5 @@
 using KRTBank.Domain.ResultPattern;
+using Microsoft.AspNetCore.Http;
 
 namespace KRTBank.Tests.Domain.Result;
 
@@ -20,12 +21,12 @@ public class ResultTests
         public void Result_Fail_Should_Set_Success_False()
         {
             // Act
-            var result = KRTBank.Domain.ResultPattern.Result.Fail("Error occurred", 400);
+            var result = KRTBank.Domain.ResultPattern.Result.Fail("Error occurred", StatusCodes.Status400BadRequest);
 
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Equal("Error occurred", result.Message);
-            Assert.Equal(400, result.Code);
+            Assert.Equal(StatusCodes.Status400BadRequest, result.Code);
         }
 
         [Fact]
@@ -51,12 +52,12 @@ public class ResultTests
             const int data = 123;
 
             // Act
-            var result = Result<int>.Fail("Failed", 500, data);
+            var result = Result<int>.Fail("Failed", StatusCodes.Status500InternalServerError, data);
 
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Equal("Failed", result.Message);
-            Assert.Equal(500, result.Code);
+            Assert.Equal(StatusCodes.Status500InternalServerError, result.Code);
             Assert.Equal(data, result.Data);
         }
 
@@ -81,6 +82,6 @@ public class ResultTests
             // Assert
             Assert.True(result.IsSuccess);
             Assert.Null(result.Message);
-            Assert.Equal(200, result.Code);
+            Assert.Equal(StatusCodes.Status200OK, result.Code);
         }
 }

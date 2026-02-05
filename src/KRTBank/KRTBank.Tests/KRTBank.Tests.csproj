@@ -22,7 +22,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\KRTBank.Application\KRTBank.Application.csproj" />
       <ProjectReference Include="..\KRTBank.Domain\KRTBank.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+        <HintPath>..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

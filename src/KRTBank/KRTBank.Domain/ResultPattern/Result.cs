@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace KRTBank.Domain.ResultPattern;
 
 public class Result<T> : Result
@@ -17,7 +19,7 @@ public class Result<T> : Result
     public static Result<T> Ok(
         string? message = default,
         T? data = default,
-        int? code = 200)
+        int? code = StatusCodes.Status200OK)
     {
         return new Result<T>(true, message, data, code);
     }
@@ -49,7 +51,7 @@ public class Result
 
     public static Result Ok(
         string? message = default,
-        int? code = 200)
+        int? code = StatusCodes.Status200OK)
     {
         return new Result(true, message, code);
     }
