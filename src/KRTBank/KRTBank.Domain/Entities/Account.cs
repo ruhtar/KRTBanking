@@ -16,7 +16,7 @@ public sealed class Account
         Id = Guid.NewGuid();
         HolderName = new HolderName(holderName); 
         Cpf = new Cpf(cpf);
-        Status = AccountStatus.Active;
+        Activate();
     }
     
     public Account(string id, string holderName, string cpf, int status)
@@ -32,12 +32,6 @@ public sealed class Account
         HolderName = new HolderName(newName);
     }
     
-    
     public void Activate() => Status = AccountStatus.Active;
     public void Deactivate() => Status = AccountStatus.Inactive;
-    
-    private Account()
-    {
-        
-    }
 }

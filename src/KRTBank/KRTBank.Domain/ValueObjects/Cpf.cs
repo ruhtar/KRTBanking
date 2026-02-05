@@ -5,7 +5,8 @@ namespace KRTBank.Domain.ValueObjects;
 
 public sealed class Cpf
 {
-    public string Value { get; }
+    public string NormalizedValue { get; }
+    public string FormattedValue { get; }
 
     public Cpf(string value)
     {
@@ -17,7 +18,8 @@ public sealed class Cpf
         if (!IsValid(normalized))
             throw new DomainException("Invalid CPF.", 400);
 
-        Value = normalized;
+        NormalizedValue = normalized;
+        FormattedValue = Format(normalized);
     }
 
     private static string Normalize(string cpf)
@@ -33,6 +35,15 @@ public sealed class Cpf
         return digits.ToString();
     }
 
+    private static string Format(string cpf)
+    {
+        var part1 = cpf.Substring(0, 3);
+        var part2 = cpf.Substring(3, 3);
+        var part3 = cpf.Substring(6, 3);
+        var part4 = cpf.Substring(9, 2);
+
+        return $"{part1}.{part2}.{part3}-{part4}";
+    }
 
     private static bool IsValid(string cpf)
     {
@@ -59,14 +70,24 @@ public sealed class Cpf
         return remainder == numbers[10];
     }
 
-    public override string ToString() => Value;
+    public override string ToString() => NormalizedValue;
 
     public override bool Equals(object? obj) => Equals(obj as Cpf);
 
     public bool Equals(Cpf? other)
-        => other is not null && Value == other.Value;
+        => other is not null && NormalizedValue == other.NormalizedValue;
 
-    public override int GetHashCode() => Value.GetHashCode();
+    public static bool operator ==(Cpf? left, Cpf? right)
+    {
+        if (ReferenceEquals(left, right)) return true;
+        if (left is null || right is null) return false;
+        return left.Equals(right);
+    }
 
-    public static implicit operator string(Cpf cpf) => cpf.Value;
+    public static bool operator !=(Cpf? left, Cpf? right)
+        => !(left == right);
+
+    public override int GetHashCode() => NormalizedValue.GetHashCode();
+
+    public static implicit operator string(Cpf cpf) => cpf.NormalizedValue;
 }

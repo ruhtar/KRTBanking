@@ -1,5 +1,6 @@
 using System.Text.Json;
 using KRTBank.Application.Interfaces;
+using KRTBank.Domain.Entities;
 using KRTBank.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
@@ -25,7 +26,7 @@ public class CacheService : ICacheService
     public async Task<T?> GetAsync<T>(string key)
     {
         var value = await _database.StringGetAsync(key);
-        return value.IsNullOrEmpty ? default : JsonSerializer.Deserialize<T>(value);
+        return value.IsNullOrEmpty ? default : JsonSerializer.Deserialize<T>(value!);
     }
 
     public async Task SetAsync<T>(string key, T value)

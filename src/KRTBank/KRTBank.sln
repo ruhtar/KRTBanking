@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KRTBank.Application", "KRTB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KRTBank.Infrastructure", "KRTBank.Infrastructure\KRTBank.Infrastructure.csproj", "{67AF4774-0496-4CEB-B7F7-551F7EF38C49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KRTBank.Tests", "KRTBank.Tests\KRTBank.Tests.csproj", "{5898FAC8-EB65-43FE-AD63-C77F9E95749D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,5 +37,9 @@ Global
 		{67AF4774-0496-4CEB-B7F7-551F7EF38C49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67AF4774-0496-4CEB-B7F7-551F7EF38C49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67AF4774-0496-4CEB-B7F7-551F7EF38C49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5898FAC8-EB65-43FE-AD63-C77F9E95749D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5898FAC8-EB65-43FE-AD63-C77F9E95749D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5898FAC8-EB65-43FE-AD63-C77F9E95749D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5898FAC8-EB65-43FE-AD63-C77F9E95749D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

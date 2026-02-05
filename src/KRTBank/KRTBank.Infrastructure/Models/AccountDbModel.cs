@@ -21,7 +21,7 @@ public class AccountDbModel
         {
             Id = account.Id.ToString(),
             HolderName = account.HolderName,
-            Cpf = account.Cpf.Value,
+            Cpf = account.Cpf.NormalizedValue,
             Status = (int)account.Status
         };
     }

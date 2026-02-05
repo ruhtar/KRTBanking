@@ -2,7 +2,6 @@ using KRTBank.Application.DTOs;
 using KRTBank.Application.Interfaces;
 using KRTBank.Domain.Entities;
 using KRTBank.Domain.Enums;
-using KRTBank.Domain.Interfaces;
 using KRTBank.Domain.ResultPattern;
 using KRTBank.Domain.ValueObjects;
 

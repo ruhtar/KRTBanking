@@ -2,7 +2,7 @@ using KRTBank.Domain.Exceptions;
 
 namespace KRTBank.Domain.ValueObjects;
 
-public class HolderName
+public sealed class HolderName
 {
     public string Value { get; }
 

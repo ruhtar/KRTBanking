@@ -1,7 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using KRTBank.Application.Interfaces;
-using KRTBank.Domain.Interfaces;
 using KRTBank.Infrastructure.Cache;
 using KRTBank.Infrastructure.Options;
 using KRTBank.Infrastructure.Repositories;

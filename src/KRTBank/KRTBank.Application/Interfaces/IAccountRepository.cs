@@ -1,6 +1,6 @@
 using KRTBank.Domain.Entities;
 
-namespace KRTBank.Domain.Interfaces;
+namespace KRTBank.Application.Interfaces;
 
 public interface IAccountRepository
 {

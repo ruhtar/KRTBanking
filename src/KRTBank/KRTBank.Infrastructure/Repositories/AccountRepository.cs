@@ -1,7 +1,7 @@
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using KRTBank.Application.Interfaces;
 using KRTBank.Domain.Entities;
-using KRTBank.Domain.Interfaces;
 using KRTBank.Domain.ValueObjects;
 using KRTBank.Infrastructure.Models;
 
