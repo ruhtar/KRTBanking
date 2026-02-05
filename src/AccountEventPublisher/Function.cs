@@ -64,10 +64,7 @@ public class Function
                     Message = message,
                     MessageAttributes = new Dictionary<string, MessageAttributeValue>
                     {
-                        // Use o "Type" do evento (estável e legível)
                         ["EventType"] = new() { DataType = "String", StringValue = accountEvent.Type },
-
-                        // Opcional (pode ser útil pro consumidor)
                         ["ContentType"] = new() { DataType = "String", StringValue = "application/json" }
                     }
                 });
@@ -76,9 +73,8 @@ public class Function
             }
             catch (Exception ex)
             {
-                // Após o SDK esgotar as retentativas, cai aqui
                 context.Logger.LogError($"Failed to publish after retries. Exception={ex}");
-                throw; // importante: mantém falha para a Lambda/DLQ/redrive lidarem
+                throw;
             }
 
         }
@@ -125,14 +121,12 @@ public class Function
         );
     }
 
-    // Contrato comum dos eventos
     public interface IAccountEvent
     {
         string Type { get; }
         DateTime Timestamp { get; }
     }
 
-    // DTOs fortes (acabou o anonymous type)
     public record AccountCreatedEvent(
         string Type,
         string AccountId,
