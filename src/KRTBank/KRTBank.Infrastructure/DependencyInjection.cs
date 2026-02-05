@@ -20,8 +20,12 @@ public static class DependencyInjection
 
         services.AddScoped<IAccountRepository, AccountRepository>();
 
-        services.Configure<RedisOptions>(
-            configuration.GetRequiredSection(RedisOptions.SectionName));
+        services
+            .AddOptions<RedisOptions>()
+            .Bind(configuration.GetRequiredSection(RedisOptions.SectionName))
+            .Validate(o => !string.IsNullOrWhiteSpace(o.Endpoint), "Endpoint is required")
+            .Validate(o => o.TtlInDays > 0, "TtlInDays must be greater than zero")
+            .ValidateOnStart();
         
         services.AddSingleton<ICacheService, CacheService>();
 

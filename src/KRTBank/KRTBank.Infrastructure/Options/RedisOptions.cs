@@ -4,6 +4,6 @@ public class RedisOptions
 {
     public const string SectionName = "Redis";
 
-    public string Endpoint { get; set; } = string.Empty;
-    public int TtlInDays { get; set; }
+    public required string Endpoint { get; set; } = string.Empty;
+    public required int TtlInDays { get; set; }
 }
