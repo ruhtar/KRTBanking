@@ -25,7 +25,7 @@ public class AccountRepository : IAccountRepository
     public async Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var model = await _context.LoadAsync<AccountDbModel>(id.ToString(), cancellationToken);
-        return model is null ? null : Account.ToDomain(model.Id, model.HolderName, model.Cpf, model.Status);
+        return model is null ? null : new Account(model.Id, model.HolderName, model.Cpf, model.Status);
     }
 
     public async Task UpdateAsync(Account account, CancellationToken cancellationToken = default)
@@ -60,7 +60,6 @@ public class AccountRepository : IAccountRepository
         var results = await search.GetNextSetAsync(cancellationToken);
         var model = results.FirstOrDefault();
 
-        return model is null ? null : Account.ToDomain(model.Id, model.HolderName, model.Cpf, model.Status);
+        return model is null ? null : new Account(model.Id, model.HolderName, model.Cpf, model.Status);
     }
-
 }

@@ -19,13 +19,12 @@ public sealed class Account
         Status = AccountStatus.Active;
     }
     
-    // Rehidratar
-    private Account(Guid id, HolderName holderName, Cpf cpf, AccountStatus status)
+    public Account(string id, string holderName, string cpf, int status)
     {
-        Id = id;
-        HolderName = holderName;
-        Cpf = cpf;
-        Status = status;
+        Id = Guid.Parse(id);
+        HolderName = new HolderName(holderName);
+        Cpf = new Cpf(cpf);
+        Status = (AccountStatus)status;
     }
 
     public void ChangeHolderName(string newName)
@@ -33,15 +32,6 @@ public sealed class Account
         HolderName = new HolderName(newName);
     }
     
-    public static Account ToDomain(string id, string holderName, string cpf, int status)
-    {
-        return new Account(
-            Guid.Parse(id),
-            new HolderName(holderName),
-            new Cpf(cpf),
-            (AccountStatus)status
-        );
-    }
     
     public void Activate() => Status = AccountStatus.Active;
     public void Deactivate() => Status = AccountStatus.Inactive;
