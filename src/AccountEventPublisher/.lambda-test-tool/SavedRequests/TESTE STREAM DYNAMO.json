@@ -1,0 +1,79 @@
+{
+  "Records": [
+    {
+      "eventID": "a1b2c3d4e5f60123456789abcde00001",
+      "eventName": "INSERT",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "Keys": {
+          "Id": { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" }
+        },
+        "NewImage": {
+          "Id":        { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" },
+          "HolderName":{ "S": "Arthur Amorim" },
+          "Cpf":       { "S": "12345678900" },
+          "Status":    { "S": "Active" }
+        },
+        "ApproximateCreationDateTime": 1717430000,
+        "SequenceNumber": "1111111111111111111111111111",
+        "SizeBytes": 120,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-east-1:123456789012:table/Accounts/stream/2026-02-04T00:00:00.000"
+    },
+    {
+      "eventID": "a1b2c3d4e5f60123456789abcde00002",
+      "eventName": "MODIFY",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "Keys": {
+          "Id": { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" }
+        },
+        "OldImage": {
+          "Id":        { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" },
+          "HolderName":{ "S": "Arthur Amorim" },
+          "Cpf":       { "S": "12345678900" },
+          "Status":    { "S": "Active" }
+        },
+        "NewImage": {
+          "Id":        { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" },
+          "HolderName":{ "S": "Arthur A. Barroso" },
+          "Cpf":       { "S": "12345678900" },
+          "Status":    { "S": "Inactive" }
+        },
+        "ApproximateCreationDateTime": 1717430300,
+        "SequenceNumber": "2222222222222222222222222222",
+        "SizeBytes": 140,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-east-1:123456789012:table/Accounts/stream/2026-02-04T00:00:00.000"
+    },
+    {
+      "eventID": "a1b2c3d4e5f60123456789abcde00003",
+      "eventName": "REMOVE",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "Keys": {
+          "Id": { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" }
+        },
+        "OldImage": {
+          "Id":        { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" },
+          "HolderName":{ "S": "Arthur A. Barroso" },
+          "Cpf":       { "S": "12345678900" },
+          "Status":    { "S": "Inactive" }
+        },
+        "ApproximateCreationDateTime": 1717430600,
+        "SequenceNumber": "3333333333333333333333333333",
+        "SizeBytes": 110,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-east-1:123456789012:table/Accounts/stream/2026-02-04T00:00:00.000"
+    }
+  ]
+}
