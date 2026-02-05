@@ -17,14 +17,14 @@ public static class DependencyInjection
     {
         services.AddAWSService<IAmazonDynamoDB>();
 
-        services.AddSingleton<IDynamoDBContext, DynamoDBContext>(); // TODO: porque singleton?
+        services.AddSingleton<IDynamoDBContext, DynamoDBContext>(); 
 
         services.AddScoped<IAccountRepository, AccountRepository>();
 
         services.Configure<RedisOptions>(
             configuration.GetRequiredSection(RedisOptions.SectionName));
         
-        services.AddSingleton<ICacheService, CacheService>(); // Mantém a conexão Redis aberta e compartilhada entre requests. Redis é thread-safe.
+        services.AddSingleton<ICacheService, CacheService>();
 
         return services;
     }
