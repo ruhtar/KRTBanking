@@ -7,8 +7,8 @@
       "RelativeMoniker": "D:0:0:{8554FC48-34C7-7C85-CE59-3A3FFD4B0ED5}|AccountEventPublisher.csproj|solutionrelative:function.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8554FC48-34C7-7C85-CE59-3A3FFD4B0ED5}|AccountEventPublisher.csproj|c:\\users\\arthur\\dev\\projetos\\teste_btg\\src\\accounteventpublisher\\accounteventpublisher.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{8554FC48-34C7-7C85-CE59-3A3FFD4B0ED5}|AccountEventPublisher.csproj|solutionrelative:accounteventpublisher.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{8554FC48-34C7-7C85-CE59-3A3FFD4B0ED5}|AccountEventPublisher.csproj|c:\\users\\arthur\\dev\\projetos\\teste_btg\\src\\accounteventpublisher\\aws-lambda-tools-defaults.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{8554FC48-34C7-7C85-CE59-3A3FFD4B0ED5}|AccountEventPublisher.csproj|solutionrelative:aws-lambda-tools-defaults.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -47,14 +47,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AccountEventPublisher",
-              "DocumentMoniker": "C:\\Users\\Arthur\\dev\\Projetos\\Teste_BTG\\src\\AccountEventPublisher\\AccountEventPublisher.csproj",
-              "RelativeDocumentMoniker": "AccountEventPublisher.csproj",
-              "ToolTip": "C:\\Users\\Arthur\\dev\\Projetos\\Teste_BTG\\src\\AccountEventPublisher\\AccountEventPublisher.csproj*",
-              "RelativeToolTip": "AccountEventPublisher.csproj*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-02-05T00:30:28.955Z",
+              "Title": "aws-lambda-tools-defaults.json",
+              "DocumentMoniker": "C:\\Users\\Arthur\\dev\\Projetos\\Teste_BTG\\src\\AccountEventPublisher\\aws-lambda-tools-defaults.json",
+              "RelativeDocumentMoniker": "aws-lambda-tools-defaults.json",
+              "ToolTip": "C:\\Users\\Arthur\\dev\\Projetos\\Teste_BTG\\src\\AccountEventPublisher\\aws-lambda-tools-defaults.json",
+              "RelativeToolTip": "aws-lambda-tools-defaults.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-05T23:11:25.059Z",
               "EditorCaption": ""
             },
             {
@@ -65,7 +65,7 @@
               "RelativeDocumentMoniker": "Function.cs",
               "ToolTip": "C:\\Users\\Arthur\\dev\\Projetos\\Teste_BTG\\src\\AccountEventPublisher\\Function.cs*",
               "RelativeToolTip": "Function.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAADwAAAAAAAAAAAAwwDYAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-05T00:27:10.005Z",
               "EditorCaption": ""
