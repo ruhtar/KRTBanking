@@ -52,6 +52,7 @@ O projeto está organizado em **5 projetos principais**, seguindo uma arquitetur
 
   * Domínio rico em `Account`, garantindo consistência de seu estado interno através dos construtores.
   * Objetos de valor (`Value Objects`) para manter consistência e validação de dados.
+  * Exceções do tipo `DomainException` são lançadas sempre que alguma validação de domínio falha. 
 
 * **Repository Pattern**
 
