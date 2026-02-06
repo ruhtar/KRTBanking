@@ -61,6 +61,10 @@ The solution is organized into **5 main projects**, following a layered architec
 
   * Clear separation between business/application logic and persistence.
 
+* **Cache Aside Pattern**
+ 
+   * Application first checks the cache for data; on a miss, it retrieves from the repository, stores it in the cache, and returns the result.
+
 * **Options Pattern**
 
   * Redis configurations injected via `IOptions`, ensuring strong typing and compile-time validation.
