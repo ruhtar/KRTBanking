@@ -74,7 +74,7 @@ public class Function
 
                 context.Logger.LogInformation($"Message to be published: {message}");
 
-                //throw new Exception("Teste de DLQ");
+                throw new Exception("Teste de DLQ");
 
                 await _sns.PublishAsync(new PublishRequest
                 {
@@ -93,7 +93,7 @@ public class Function
             {
                 context.Logger.LogError($"Failed to publish. Exception={ex}");
 
-                await SendToDlqAsync(record, message, ex);
+                await SendToDlqAsync(record, message, ex, context);
 
                 continue;
             }
@@ -176,47 +176,54 @@ public class Function
     private async Task SendToDlqAsync(
         DynamodbStreamRecord record,
         string? messageToPublish,
-        Exception ex)
+        Exception ex,
+        ILambdaContext context)
     {
-        JsonElement? messageJson = null;
-        if (!string.IsNullOrWhiteSpace(messageToPublish))
+        try
         {
-            using var doc = JsonDocument.Parse(messageToPublish);
-            messageJson = doc.RootElement.Clone(); 
-        }
-
-        var dlqPayload = new
-        {
-            error = new
+            JsonElement? messageJson = null;
+            if (!string.IsNullOrWhiteSpace(messageToPublish))
             {
-                message = ex.Message,
-                type = ex.GetType().Name,
-                stackTrace = ex.StackTrace
-            },
-            stream = new
-            {
-                eventName = record.EventName,
-            },
-            publish = new
-            {
-                target = "SNS",
-                topicArn = _topicArn,
-                message = (object?)messageJson ?? messageToPublish
-            },
-            meta = new
-            {
-                timestampUtc = DateTime.UtcNow
+                using var doc = JsonDocument.Parse(messageToPublish);
+                messageJson = doc.RootElement.Clone();
             }
-        };
 
-        var dlqBody = JsonSerializer.Serialize(dlqPayload, JsonOptions);
+            var dlqPayload = new
+            {
+                error = new
+                {
+                    message = ex.Message,
+                    type = ex.GetType().Name,
+                    stackTrace = ex.StackTrace
+                },
+                stream = new
+                {
+                    eventName = record.EventName,
+                },
+                publish = new
+                {
+                    target = "SNS",
+                    topicArn = _topicArn,
+                    message = (object?)messageJson ?? messageToPublish
+                },
+                meta = new
+                {
+                    timestampUtc = DateTime.UtcNow
+                }
+            };
 
-        await _sqs.SendMessageAsync(new SendMessageRequest
+            var dlqBody = JsonSerializer.Serialize(dlqPayload, JsonOptions);
+
+            await _sqs.SendMessageAsync(new SendMessageRequest
+            {
+                QueueUrl = _dlqQueueUrl,
+                MessageBody = dlqBody
+            });
+        }
+        catch (Exception dlqEx)
         {
-            QueueUrl = _dlqQueueUrl,
-            MessageBody = dlqBody
-        });
+            context.Logger.LogError($"Failed to publish on DLQ. Exception={dlqEx}");
+        }
     }
-
 }
 

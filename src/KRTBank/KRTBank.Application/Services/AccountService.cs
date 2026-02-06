@@ -55,7 +55,8 @@ public class AccountService : IAccountService
         if (account is null)
             return Result.Fail($"Account with id {id} was not found.", StatusCodes.Status404NotFound);
 
-        account.ChangeHolderName(dto.HolderName);
+        if(string.IsNullOrWhiteSpace(dto.HolderName) is false)
+            account.ChangeHolderName(dto.HolderName);
 
         if (dto.IsActive is true)
             account.Activate();
