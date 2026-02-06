@@ -124,7 +124,8 @@ public class Function
             AccountId: newImage["Id"].S,
             OldName: oldImage["HolderName"].S,
             NewName: newImage["HolderName"].S,
-            Status: newImage["Status"].N,
+            NewStatus: newImage["Status"].N,
+            OldStatus: oldImage["Status"].N,
             Timestamp: DateTime.UtcNow
         );
     }
@@ -160,7 +161,8 @@ public class Function
         string AccountId,
         string OldName,
         string NewName,
-        string Status,
+        string OldStatus,
+        string NewStatus,
         DateTime Timestamp
     ) : IAccountEvent;
 
