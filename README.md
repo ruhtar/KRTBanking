@@ -1,99 +1,102 @@
 # KRT Bank
 
-KRT Bank é uma **API de gerenciamento de contas**, desenvolvida em **.NET**, seguindo os princípios de **Domain-Driven Design (DDD)**, com **domínios ricos, objetos de valor**, e implementações de **testes unitários**.
+KRT Bank is an **account management API** developed in **.NET**, following **Domain-Driven Design (DDD)** principles, featuring **rich domains, value objects**, and **unit test implementations**.
 
-O sistema é projetado para operações **CRUD** (GET, POST, PUT, DELETE) de contas, com **cache distribuído**, **mensageria assíncrona** e integração com serviços da AWS.
+This project was created as a technical challenge for **Act Digital**, with the goal of being allocated to **BTG Pactual**.
 
-O projeto também possui uma Lambda chamada **AccountEventPublisher**, responsável por publicar eventos de exclusão, atualização e criação de `Accounts` em um tópico SNS da AWS. 
+The system is designed for **CRUD** operations (GET, POST, PUT, DELETE) on accounts, with **distributed caching**, **asynchronous messaging**, and integration with AWS services.
 
----
-
-## Estrutura do projeto da API
-
-O projeto está organizado em **5 projetos principais**, seguindo uma arquitetura em camadas:
-
-* **KRTBank.API**: Camada de apresentação, responsável por expor os endpoints REST da API.
-* **KRTBank.Application**: Contém serviços e DTOs da aplicação.
-* **KRTBank.Domain**: Camada de domínio, com a entidade `Account`, objetos de valor, como `CPF` e `HolderName` e algumas regras de negócio.
-* **KRTBank.Infrastructure**: Implementações de repositórios, integração com DynamoDB e Redis.
-* **KRTBank.Tests**: Testes unitários garantindo mais confiabilidade à aplicação.
+The project also includes a Lambda function called **AccountEventPublisher**, responsible for publishing account creation, update, and deletion events to an AWS SNS topic.
 
 ---
 
-## Funcionalidades
+## API Project Structure
 
-* **CRUD de Accounts**
+The solution is organized into **5 main projects**, following a layered architecture:
 
-  * **GET**: Busca contas por Id e utiliza cache distribuído (Redis).
-  * **POST**: Criação de novas contas.
-  * **PUT**: Atualização de contas existentes.
-  * **DELETE**: Remoção de contas.
-
-* **Cache Distribuído**
-
-  * Implementado com **Redis** via Docker.
-  * Permite consultas mais rápidas e evita sobrecarga no banco de dados, reduzindo os custos de leitura.
-
-* **Banco de Dados**
-
-  * Utiliza **Amazon DynamoDB**.
-  * Streams do DynamoDB capturam alterações nas contas.
-
-* **Event-driven**
-
-  * As alterações em contas disparam **streams** que são processadas por uma **AWS Lambda** (`AccountEventPublisher`).
-  * Lambda trata o payload e publica eventos em um **tópico SNS**, disponibilizando-os para outros sistemas.
+* **KRTBank.API**: Presentation layer responsible for exposing REST API endpoints.
+* **KRTBank.Application**: Contains application services and DTOs.
+* **KRTBank.Domain**: Domain layer with the `Account` entity, value objects such as `CPF` and `HolderName`, and core business rules.
+* **KRTBank.Infrastructure**: Repository implementations and integrations with DynamoDB and Redis.
+* **KRTBank.Tests**: Unit tests that ensure greater application reliability.
 
 ---
 
-## Padrões e Boas Práticas
+## Features
+
+* **Accounts CRUD**
+
+  * **GET**: Retrieves accounts by Id using distributed cache (Redis).
+  * **POST**: Creates new accounts.
+  * **PUT**: Updates existing accounts.
+  * **DELETE**: Removes accounts.
+
+* **Distributed Cache**
+
+  * Implemented with **Redis** via Docker.
+  * Enables faster queries and prevents database overload, reducing read costs.
+
+* **Database**
+
+  * Uses **Amazon DynamoDB**.
+  * DynamoDB Streams capture changes made to accounts.
+
+* **Event-Driven Architecture**
+
+  * Account changes trigger **streams** processed by an **AWS Lambda** (`AccountEventPublisher`).
+  * The Lambda processes the payload and publishes events to an **SNS topic**, making them available to other systems.
+  * In case of publishing failures, messages are sent to a **Dead Letter Queue (DLQ)**.
+
+---
+
+## Patterns and Best Practices
 
 * **Domain-Driven Design (DDD)**
 
-  * Domínio rico em `Account`, garantindo consistência de seu estado interno através dos construtores.
-  * Objetos de valor (`Value Objects`) para manter consistência e validação de dados.
-  * Exceções do tipo `DomainException` são lançadas sempre que alguma validação de domínio falha. 
+  * Rich domain centered around `Account`, ensuring internal state consistency through constructors.
+  * Value Objects to enforce data validation and integrity.
+  * `DomainException` is thrown whenever a domain validation fails.
 
 * **Repository Pattern**
 
-  * Separação clara entre a lógica de negócio/aplicação e persistência.
+  * Clear separation between business/application logic and persistence.
 
 * **Options Pattern**
 
-  * Configurações do Redis injetadas via `IOptions`, garantindo tipagem forte para as configurações, bem como validação em tempo de compilação.
+  * Redis configurations injected via `IOptions`, ensuring strong typing and compile-time validation.
 
 * **Result Pattern**
 
-  * Operações retornam objetos de resultado (`Result`) com status e mensagens.
+  * Operations return result objects (`Result`) containing status and messages.
 
-* **Testes**
+* **Testing**
 
-  * Cobertura com **XUnit** e **Moq**, garantindo confiabilidade das regras de negócio e de aplicação.
-
----
-
-## Arquitetura
-
-Fluxo resumido:
-
-1. API recebe requisições REST (`GET`, `POST`, `PUT`, `DELETE`).
-2. Consulta ao **cache Redis** para `GET`.
-3. Persistência e atualização no **DynamoDB**.
-4. Streams do DynamoDB acionam **Lambda** (`AccountEventPublisher`).
-5. Lambda processa payload e publica eventos no **SNS**.
-6. Em caso de erro durante envio ao tópcio, publica mensagem em **DLQ**.
-
-![alt text](image.png)
+  * Test coverage with **xUnit** and **Moq**, ensuring reliability for business and application rules.
 
 ---
 
-## Tecnologias Utilizadas
+## Architecture
 
-* **C# e .NET 8**
+**High-level flow:**
+
+1. The API receives REST requests (`GET`, `POST`, `PUT`, `DELETE`).
+2. Queries **Redis cache** for GET operations.
+3. Persists and updates data in **DynamoDB**.
+4. DynamoDB Streams trigger the **Lambda** (`AccountEventPublisher`).
+5. The Lambda processes the payload and publishes events to **SNS**.
+6. If an error occurs while publishing, the message is sent to a **DLQ**.
+
+![Architecture Diagram](image.png)
+
+---
+
+## Technologies
+
+* **C# and .NET 8**
 * **AWS DynamoDB**
 * **AWS Lambda**
 * **AWS SNS**
 * **Redis (via Docker)**
 * **Domain-Driven Design (DDD)**
-* **XUnit + Moq**
+* **xUnit + Moq**
 * **Patterns:** Repository, Options, Result
