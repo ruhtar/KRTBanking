@@ -3,7 +3,11 @@ using Amazon.Lambda.DynamoDBEvents;
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
+using Amazon.SQS;
+using Amazon.SQS.Model;
 using System.Text.Json;
+using static Amazon.Lambda.DynamoDBEvents.DynamoDBEvent;
+using MessageAttributeValue = Amazon.SimpleNotificationService.Model.MessageAttributeValue;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -12,11 +16,14 @@ namespace AccountEventPublisher;
 public class Function
 {
     private readonly AmazonSimpleNotificationServiceClient _sns;
+    private readonly AmazonSQSClient _sqs;
     private readonly string _topicArn;
+    private readonly string _dlqQueueUrl;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true
     };
 
     public Function()
@@ -27,8 +34,14 @@ public class Function
             MaxErrorRetry = 3
         };
         _sns = new AmazonSimpleNotificationServiceClient(snsConfig);
+
+        _sqs = new AmazonSQSClient();
+
         _topicArn = Environment.GetEnvironmentVariable("SNS_TOPIC_ARN")
             ?? throw new Exception("SNS_TOPIC_ARN not configured");
+
+        _dlqQueueUrl = Environment.GetEnvironmentVariable("DLQ_QUEUE_URL") 
+            ?? throw new Exception("DLQ_QUEUE_URL not configured");
     }
 
     public async Task FunctionHandler(DynamoDBEvent dynamoEvent, ILambdaContext context)
@@ -37,13 +50,16 @@ public class Function
 
         foreach (var record in dynamoEvent.Records)
         {
+            string? message = null;          
+            IAccountEvent? accountEvent = null;
+
             try
             {
                 var eventName = record.EventName;
 
                 context.Logger.LogInformation($"Record received: {JsonSerializer.Serialize(record, JsonOptions)}");
 
-                IAccountEvent? accountEvent = eventName switch
+                accountEvent = eventName switch
                 {
                     "INSERT" => BuildCreatedEvent(record),
                     "MODIFY" => BuildUpdatedEvent(record),
@@ -54,9 +70,11 @@ public class Function
                 if (accountEvent is null)
                     continue;
 
-                var message = JsonSerializer.Serialize(accountEvent, accountEvent.GetType(), JsonOptions);
+                message = JsonSerializer.Serialize(accountEvent, accountEvent.GetType(), JsonOptions);
 
                 context.Logger.LogInformation($"Message to be published: {message}");
+
+                //throw new Exception("Teste de DLQ");
 
                 await _sns.PublishAsync(new PublishRequest
                 {
@@ -73,13 +91,14 @@ public class Function
             }
             catch (Exception ex)
             {
-                context.Logger.LogError($"Failed to publish after retries. Exception={ex}");
-                throw;
-            }
+                context.Logger.LogError($"Failed to publish. Exception={ex}");
 
+                await SendToDlqAsync(record, message, ex);
+
+                continue;
+            }
         }
     }
-
 
     private static AccountCreatedEvent BuildCreatedEvent(DynamoDBEvent.DynamodbStreamRecord record)
     {
@@ -150,5 +169,52 @@ public class Function
         string AccountId,
         DateTime Timestamp
     ) : IAccountEvent;
+
+
+    private async Task SendToDlqAsync(
+        DynamodbStreamRecord record,
+        string? messageToPublish,
+        Exception ex)
+    {
+        JsonElement? messageJson = null;
+        if (!string.IsNullOrWhiteSpace(messageToPublish))
+        {
+            using var doc = JsonDocument.Parse(messageToPublish);
+            messageJson = doc.RootElement.Clone(); 
+        }
+
+        var dlqPayload = new
+        {
+            error = new
+            {
+                message = ex.Message,
+                type = ex.GetType().Name,
+                stackTrace = ex.StackTrace
+            },
+            stream = new
+            {
+                eventName = record.EventName,
+            },
+            publish = new
+            {
+                target = "SNS",
+                topicArn = _topicArn,
+                message = (object?)messageJson ?? messageToPublish
+            },
+            meta = new
+            {
+                timestampUtc = DateTime.UtcNow
+            }
+        };
+
+        var dlqBody = JsonSerializer.Serialize(dlqPayload, JsonOptions);
+
+        await _sqs.SendMessageAsync(new SendMessageRequest
+        {
+            QueueUrl = _dlqQueueUrl,
+            MessageBody = dlqBody
+        });
+    }
+
 }
 

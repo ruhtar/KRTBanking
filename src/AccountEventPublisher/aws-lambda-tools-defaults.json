@@ -20,7 +20,7 @@
   "function-subnets": "",
   "function-security-groups": "",
   "tracing-mode": "PassThrough",
-  "environment-variables": "\u0022SNS_TOPIC_ARN\u0022=\u0022arn:aws:sns:us-east-1:775442788781:krtbank-account-events\u0022",
+  "environment-variables": "\u0022SNS_TOPIC_ARN\u0022=\u0022arn:aws:sns:us-east-1:775442788781:krtbank-account-events\u0022;\u0022DLQ_QUEUE_URL\u0022=\u0022https://sqs.us-east-1.amazonaws.com/775442788781/AccountEventPublisher-DLQ\u0022",
   "image-tag": "",
   "function-description": "",
   "dead-letter-target-arn": "arn:aws:sqs:us-east-1:775442788781:AccountEventPublisher-DLQ"

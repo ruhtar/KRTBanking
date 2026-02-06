@@ -14,7 +14,7 @@
           "Id":        { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" },
           "HolderName":{ "S": "Arthur Amorim" },
           "Cpf":       { "S": "12345678900" },
-          "Status":    { "S": "Active" }
+          "Status":    { "N": "1" }
         },
         "ApproximateCreationDateTime": 1717430000,
         "SequenceNumber": "1111111111111111111111111111",
@@ -37,13 +37,13 @@
           "Id":        { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" },
           "HolderName":{ "S": "Arthur Amorim" },
           "Cpf":       { "S": "12345678900" },
-          "Status":    { "S": "Active" }
+          "Status":    { "N": "1" }
         },
         "NewImage": {
           "Id":        { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" },
           "HolderName":{ "S": "Arthur A. Barroso" },
           "Cpf":       { "S": "12345678900" },
-          "Status":    { "S": "Inactive" }
+          "Status":    { "N": "2" }
         },
         "ApproximateCreationDateTime": 1717430300,
         "SequenceNumber": "2222222222222222222222222222",
@@ -66,7 +66,7 @@
           "Id":        { "S": "7b4e9c1a-2c3d-4e5f-8a9b-0c1d2e3f4a5b" },
           "HolderName":{ "S": "Arthur A. Barroso" },
           "Cpf":       { "S": "12345678900" },
-          "Status":    { "S": "Inactive" }
+          "Status":    { "N": "2" }
         },
         "ApproximateCreationDateTime": 1717430600,
         "SequenceNumber": "3333333333333333333333333333",
