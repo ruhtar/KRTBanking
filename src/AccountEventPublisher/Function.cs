@@ -74,7 +74,7 @@ public class Function
 
                 context.Logger.LogInformation($"Message to be published: {message}");
 
-                throw new Exception("Teste de DLQ");
+                //throw new Exception("Teste de DLQ");
 
                 await _sns.PublishAsync(new PublishRequest
                 {
