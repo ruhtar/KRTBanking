@@ -81,6 +81,9 @@ Fluxo resumido:
 3. Persistência e atualização no **DynamoDB**.
 4. Streams do DynamoDB acionam **Lambda** (`AccountEventPublisher`).
 5. Lambda processa payload e publica eventos no **SNS**.
+6. Em caso de erro durante envio ao tópcio, publica mensagem em **DLQ**.
+
+![alt text](image.png)
 
 ---
 

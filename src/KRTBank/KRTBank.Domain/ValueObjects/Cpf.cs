@@ -1,5 +1,6 @@
 using System.Text;
 using KRTBank.Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace KRTBank.Domain.ValueObjects;
 
@@ -11,12 +12,12 @@ public sealed class Cpf
     public Cpf(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("CPF is required.", 400);
+            throw new DomainException("CPF is required.", StatusCodes.Status400BadRequest);
 
         var normalized = Normalize(value);
 
         if (!IsValid(normalized))
-            throw new DomainException("Invalid CPF.", 400);
+            throw new DomainException("Invalid CPF.", StatusCodes.Status400BadRequest);
 
         NormalizedValue = normalized;
         FormattedValue = Format(normalized);

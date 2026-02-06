@@ -55,9 +55,8 @@ public class AccountRepository : IAccountRepository
             Limit = 1  // CPF deve ser único
         };
 
-        var search = _context.FromQueryAsync<AccountDbModel>(queryConfig);
+        var results = await _context.FromQueryAsync<AccountDbModel>(queryConfig).GetNextSetAsync(cancellationToken);
 
-        var results = await search.GetNextSetAsync(cancellationToken);
         var model = results.FirstOrDefault();
 
         return model is null ? null : new Account(model.Id, model.HolderName, model.Cpf, model.Status);

@@ -6,9 +6,9 @@ public class Result<T> : Result
 {
     public T? Data { get; private set; }
 
-    protected Result(
+    private Result(
         bool success,
-        string? message = default,
+        string? message = null,
         T? data = default,
         int? code = null)
         : base(success, message, code)
@@ -17,7 +17,7 @@ public class Result<T> : Result
     }
 
     public static Result<T> Ok(
-        string? message = default,
+        string? message = null,
         T? data = default,
         int? code = StatusCodes.Status200OK)
     {
@@ -41,7 +41,7 @@ public class Result
 
     protected Result(
         bool success,
-        string? message = default,
+        string? message = null,
         int? code = null)
     {
         IsSuccess = success;
@@ -50,7 +50,7 @@ public class Result
     }
 
     public static Result Ok(
-        string? message = default,
+        string? message = null,
         int? code = StatusCodes.Status200OK)
     {
         return new Result(true, message, code);

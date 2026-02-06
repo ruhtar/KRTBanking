@@ -14,18 +14,18 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAWSService<IAmazonDynamoDB>();
-
-        services.AddSingleton<IDynamoDBContext, DynamoDBContext>(); 
-
-        services.AddScoped<IAccountRepository, AccountRepository>();
-
         services
             .AddOptions<RedisOptions>()
             .Bind(configuration.GetRequiredSection(RedisOptions.SectionName))
             .Validate(o => !string.IsNullOrWhiteSpace(o.Endpoint), "Endpoint is required")
             .Validate(o => o.TtlInDays > 0, "TtlInDays must be greater than zero")
             .ValidateOnStart();
+        
+        services.AddAWSService<IAmazonDynamoDB>();
+
+        services.AddSingleton<IDynamoDBContext, DynamoDBContext>(); 
+
+        services.AddSingleton<IAccountRepository, AccountRepository>();
         
         services.AddSingleton<ICacheService, CacheService>();
 

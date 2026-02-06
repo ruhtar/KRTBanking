@@ -7,12 +7,12 @@ namespace KRTBank.Infrastructure.Models;
 public class AccountDbModel
 {
     [DynamoDBHashKey]
-    public string Id { get; set; } = default!;
-    public string HolderName { get; set; } = default!;
+    public required string Id { get; set; }
+    public required string HolderName { get; set; } 
     
     [DynamoDBProperty]
     [DynamoDBGlobalSecondaryIndexHashKey("CpfIndex")] 
-    public string Cpf { get; set; } = default!;
+    public required string Cpf { get; set; } 
     public int Status { get; set; }
     
     public static AccountDbModel ToDbModel(Account account)

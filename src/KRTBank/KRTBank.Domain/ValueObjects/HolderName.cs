@@ -1,4 +1,5 @@
 using KRTBank.Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace KRTBank.Domain.ValueObjects;
 
@@ -9,10 +10,10 @@ public sealed class HolderName
     public HolderName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("HolderName is required.", 400);
+            throw new DomainException("HolderName is required.", StatusCodes.Status400BadRequest);
 
         if (value.Length < 3)
-            throw new DomainException("HolderName is too short.", 400);
+            throw new DomainException("HolderName is too short.", StatusCodes.Status400BadRequest);
 
         Value = value.Trim();
     }
